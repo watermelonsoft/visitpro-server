@@ -9,8 +9,10 @@ dotenv.config();
 
 router.get('/', auth, async (req, res) => {
     try {
-        let tsql = `select * from jabatan where deleted_at is null`;
+        let tsql = `select * from jabatan where deleted_at is null`;     
         const r = await openTable(tsql);
+       
+        
         res.send(r);
     } catch (err) {
         res.send(err)

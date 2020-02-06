@@ -9,7 +9,11 @@ dotenv.config();
 
 router.get('/', auth, async (req, res) => {
     try {
+
+        const crt = req.query.crt;
         let tsql = `select * from v_rencana where deleted_at is null`;
+        if (crt) tsql += ' and ' + crt
+        
         const r = await openTable(tsql);
         res.send(r);
     } catch (err) {
@@ -52,7 +56,7 @@ router.put('/:id', auth, async (req, res) => {
     const { error } = rencanaValidation(req.body);
     if (error) return res.status(400).send(error.details[0].message);
 
-
+    
     try {
         let tsql = `update rencana set`;
         tsql += ` tanggal='${moment(req.body.tanggal).format('YYYY-MM-DD HH:mm:ss')}', `;

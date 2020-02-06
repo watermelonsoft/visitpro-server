@@ -19,17 +19,12 @@ const loginValidation = data => {
     return schema.validate(data);
 }
 
-const tsimpValidation = data => {
+const userValidation = data => {
     const schema = Joy.object({
-        idkoperasi: Joy.number().required(),
-        idcabang: Joy.number().required(),
-        anggotaId: Joy.number().required(),
-        idjenis: Joy.number().required(),
-        jk: Joy.number(),
-        setoran: Joy.number(),
-        nilai: Joy.number(),
-        materai: Joy.number(),
-
+        nama: Joy.string().min(3).required(),
+        phone: Joy.string().min(10).required(),
+        status: Joy.string().required(),
+        jabatanId: Joy.number().required(),      
     });
 
     return schema.validate(data);
@@ -79,8 +74,7 @@ const rencanaValidation = data => {
 }
 
 const kunjunganValidation = data => {
-    const schema = Joy.object({
-        tanggal: Joy.date().required(),
+    const schema = Joy.object({     
         instansiId: Joy.number().required(),
         sub_instansiId: Joy.number().required(),
         pic: Joy.string().required(),
@@ -103,5 +97,5 @@ module.exports.subinstansiValidation = subinstansiValidation;
 module.exports.jabatanValidation = jabatanValidation;
 module.exports.rencanaValidation = rencanaValidation;
 module.exports.kunjunganValidation = kunjunganValidation;
-// module.exports.tsimpEditValidation = tsimpEditValidation;
+module.exports.userValidation = userValidation;
 // module.exports.anggotaAddValidation=anggotaAddValidation;
