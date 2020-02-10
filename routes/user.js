@@ -2,7 +2,7 @@ const router = require('express').Router();
 const moment = require('moment');
 const { registerValidation, loginValidation, userValidation } = require('../validation');
 const bcrypt = require('bcryptjs');
-const { runQuery, openTable } = require('../dbOperation');
+const { runQuery, openTable, dCount, dSum } = require('../dbOperation');
 const dotenv = require('dotenv');
 const randomstring = require("randomstring");
 const auth = require('../auths/userAuth');
@@ -132,6 +132,58 @@ router.put('/:id', auth, async (req, res) => {
 
     } catch (err) {
         res.json({ error: true, msg: err })
+    }
+
+
+});
+
+router.get('/performa', auth, async (req, res) => {
+
+    const token = req.header('auth-token');
+    if (!token) return res.status(400).send('Acces Denied');
+
+
+    try {
+
+        let kunjunganini = 0
+        let kunjunganlalu = 0
+        let instansi = 0
+        let performa = 0
+        let today = new Date
+
+
+        let crt = `created_by=${req.user[0].userId} and bulan=${today.getMonth() + 1} and tahun=${today.getFullYear()}`
+
+        kunjunganini = await dSum('jml', 'v_performa', crt)
+        instansi = await dCount('instansiId', 'v_performa', crt)
+
+
+        let bulanLalu = new Date(today.setMonth(today.getMonth() - 1))
+        crt = `created_by=${req.user[0].userId} and bulan=${bulanLalu.getMonth() + 1} and tahun=${bulanLalu.getFullYear()}`
+        kunjunganlalu = await dSum('jml', 'v_performa', crt)
+
+        if (!kunjunganini) kunjunganini = 0
+        if (!kunjunganlalu) kunjunganlalu = 0
+        if (!instansi) instansi = 0
+
+        if (kunjunganlalu > 0)
+            performa = (kunjunganini - kunjunganlalu) / kunjunganlalu
+        else {
+            performa = 100
+        }
+
+
+        if (kunjunganini === 0 && kunjunganlalu == 0) performa = 0
+        res.json({
+            kunjungan: kunjunganini,
+            instansi: instansi,
+            performa: performa
+        });
+
+
+    } catch (err) {
+
+        res.send(err)
     }
 
 

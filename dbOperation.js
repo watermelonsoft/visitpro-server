@@ -45,12 +45,13 @@ const dSum = async (fldName, tableName, crt) => {
     let queryString = 'select sum(' + fldName + ') as jml from ' + tableName;
     if (crt) queryString += ' where ' + crt;
 
-
+    console.log(queryString);
+    
     try {
 
         await sql.connect(dbConfig);
         const result = await sql.query(queryString);
-        return result.recordset[0];
+        return result.recordset[0].jml;
     } catch (err) {
         return 0
     }
@@ -61,12 +62,11 @@ const dCount = async (fldName, tableName, crt) => {
     let queryString = 'select count(' + fldName + ') as jml from ' + tableName;
     if (crt) queryString += ' where ' + crt;
 
-
     try {
-
+   
         await sql.connect(dbConfig);
-        const result = await sql.query(queryString);
-        return result.recordset[0];
+        const result = await sql.query(queryString);    
+        return result.recordset[0].jml;
     } catch (err) {
         return 0
     }
