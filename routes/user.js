@@ -40,11 +40,13 @@ router.post('/login', async (req, res) => {
 
 
         const user = await openTable("select id,password from Users where phone ='" + req.body.phone + "'")
-        if (user.length == 0) return res.json({ error: true, msg: 'Nomor Telpon salah' });
+        // if (user.length == 0) return res.json({ error: true, msg: 'Nomor Telpon salah' });
+        if (user.length == 0) return res.status(400).send('Nomor Telpon salah');
 
         const match = await bcrypt.compare(req.body.password, user[0].password);
 
-        if (!match) return res.json({ error: true, msg: 'Password salah' });
+        // if (!match) return res.json({ error: true, msg: 'Password salah' });
+        if (!match) return res.status(400).send('Password salah');
 
         const token_life = 24;
         const expired_at = moment().add(token_life, 'hours').format('YYYY-MM-DD HH:mm:ss');
