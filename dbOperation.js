@@ -45,8 +45,6 @@ const dSum = async (fldName, tableName, crt) => {
     let queryString = 'select sum(' + fldName + ') as jml from ' + tableName;
     if (crt) queryString += ' where ' + crt;
 
-    console.log(queryString);
-    
     try {
 
         await sql.connect(dbConfig);
