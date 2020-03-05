@@ -52,7 +52,7 @@ router.post('/', auth, async (req, res) => {
 
 
     try {
-        let tsql = `insert into instansi(nm_instansi,alamat,pic,${phoneLabel} created_by)values('${req.body.nm_instansi}','${req.body.alamat}', '${req.body.pic}',${phone} ${req.user[0].userId})`;
+        let tsql = `insert into instansi(kabupatenId,nm_instansi,alamat,pic,${phoneLabel}  created_by)values(${req.body.kabupatenId},'${req.body.nm_instansi}','${req.body.alamat}', '${req.body.pic}',${phone} ${req.user[0].userId})`;
 
        
         const r = await runQuery(tsql);
@@ -68,12 +68,13 @@ router.put('/:id', auth, async (req, res) => {
     if (error) return res.status(400).send(error.details[0].message);
 
 
-    let phone = null;
+    // let phone = null;
     if (req.body.phone) phone = req.body.phone;
 
 
     try {
         let tsql = `update instansi set`;
+        tsql += ` kabupatenId=${req.body.kabupatenId}, `;
         tsql += ` nm_instansi='${req.body.nm_instansi}', `;
         tsql += ` alamat='${req.body.alamat}', `;
         tsql += ` pic='${req.body.pic}', `;

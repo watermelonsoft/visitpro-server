@@ -39,6 +39,7 @@ router.post('/', auth, async (req, res) => {
     
     
     
+    
     let tgl_followup='';
     let tgl_followupLabel='';
     if(req.body.tgl_followup){
@@ -47,8 +48,8 @@ router.post('/', auth, async (req, res) => {
     }
 
     try {
-        let tsql = `insert into kunjungan(tanggal,instansiId,sub_instansiId,pic,dari,sampai,hasil,${ tgl_followupLabel}statusId, created_by)`
-        tsql += `values('${moment(req.body.dari).format('YYYY-MM-DD HH:mm:ss')}', ${req.body.instansiId}, ${req.body.sub_instansiId},'${req.body.pic}','${moment(req.body.dari).format('YYYY-MM-DD HH:mm:ss')}','${moment(req.body.sampai).format('YYYY-MM-DD HH:mm:ss')}','${req.body.hasil}',${tgl_followup} ${req.body.statusId},${req.user[0].userId})`;
+        let tsql = `insert into kunjungan(tipe,tanggal,instansiId,sub_instansi,pic,dari,sampai,hasil,${ tgl_followupLabel}statusId, created_by)`
+        tsql += `values('${req.body.tipe}','${moment(req.body.dari).format('YYYY-MM-DD HH:mm:ss')}', ${req.body.instansiId}, '${req.body.sub_instansi}','${req.body.pic}','${moment(req.body.dari).format('YYYY-MM-DD HH:mm:ss')}','${moment(req.body.sampai).format('YYYY-MM-DD HH:mm:ss')}','${req.body.hasil}',${tgl_followup} ${req.body.statusId},${req.user[0].userId})`;
 
     
         
@@ -66,9 +67,10 @@ router.put('/:id', auth, async (req, res) => {
    
     try {
         let tsql = `update kunjungan set`;
+        tsql += ` tipe='${req.body.tipe}', `;
         tsql += ` tanggal='${moment(req.body.tanggal).format('YYYY-MM-DD HH:mm:ss')}', `;
         tsql += ` instansiId=${req.body.instansiId}, `;
-        tsql += ` sub_instansiId=${req.body.sub_instansiId}, `;
+        tsql += ` sub_instansi='${req.body.sub_instansi}', `;
         tsql += ` pic='${req.body.pic}', `;
         tsql += ` dari='${moment(req.body.dari).format('YYYY-MM-DD HH:mm:ss')}', `;
         tsql += ` sampai='${moment(req.body.sampai).format('YYYY-MM-DD HH:mm:ss')}', `;
