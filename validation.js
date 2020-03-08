@@ -32,6 +32,7 @@ const userValidation = data => {
 
 const instansiValidation = data => {
     const schema = Joy.object({
+        provinsiId:Joy.number().required(),
         kabupatenId:Joy.number().required(),
         nm_instansi: Joy.string().required(),
         alamat: Joy.string().required(),
@@ -77,6 +78,23 @@ const rencanaValidation = data => {
 const kunjunganValidation = data => {
     const schema = Joy.object({     
         tipe:Joy.string().required(),
+        rencanaId:Joy.number().required(),
+        instansiId: Joy.number().required(),
+        sub_instansi: Joy.string().required(),
+        pic: Joy.string().required(),
+        dari:  Joy.date().required(),
+        sampai: Joy.date().required(),
+        hasil: Joy.string().required(),
+        statusId: Joy.number().required(),
+        tgl_followup:Joy.date()
+    });
+
+    return schema.validate(data);
+}
+
+const kunjunganLangsungValidation = data => {
+    const schema = Joy.object({     
+        tipe:Joy.string().required(),
         instansiId: Joy.number().required(),
         sub_instansi: Joy.string().required(),
         pic: Joy.string().required(),
@@ -100,4 +118,4 @@ module.exports.jabatanValidation = jabatanValidation;
 module.exports.rencanaValidation = rencanaValidation;
 module.exports.kunjunganValidation = kunjunganValidation;
 module.exports.userValidation = userValidation;
-// module.exports.anggotaAddValidation=anggotaAddValidation;
+module.exports.kunjunganLangsungValidation=kunjunganLangsungValidation;

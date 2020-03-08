@@ -13,7 +13,21 @@ router.get('/', auth, async (req, res) => {
         const crt = req.query.crt;
         let tsql = `select * from v_rencana where deleted_at is null`;
         if (crt) tsql += ' and ' + crt
-        
+
+        const r = await openTable(tsql);
+        res.send(r);
+    } catch (err) {
+        res.send(err)
+    }
+
+})
+
+router.get('/:id', auth, async (req, res) => {
+    try {
+
+        const crt = req.query.crt;
+        let tsql = `select * from v_rencana where  id=${req.params.id}`;
+
         const r = await openTable(tsql);
         res.send(r);
     } catch (err) {
@@ -39,11 +53,11 @@ router.post('/', auth, async (req, res) => {
 
 
     try {
-        let tsql = `insert into rencana(tanggal,instansiId,sub_instansiId,pic,keperluan,statusId, created_by)`
-        tsql += `values('${moment(req.body.tanggal).format('YYYY-MM-DD HH:mm:ss')}', ${req.body.instansiId}, ${req.body.sub_instansiId},'${req.body.pic}','${req.body.keperluan}', ${req.body.statusId},${req.user[0].userId})`;
-        
+        let tsql = `insert into rencana(tanggal,instansiId,sub_instansi,pic,keperluan,statusId, created_by)`
+        tsql += `values('${moment(req.body.tanggal).format('YYYY-MM-DD HH:mm:ss')}', ${req.body.instansiId}, '${req.body.sub_instansi}','${req.body.pic}','${req.body.keperluan}', ${req.body.statusId},${req.user[0].userId})`;
+
         // return res.send(tsql)
-        
+
         const r = await runQuery(tsql);
         res.send(r);
     } catch (err) {
@@ -56,12 +70,12 @@ router.put('/:id', auth, async (req, res) => {
     const { error } = rencanaValidation(req.body);
     if (error) return res.status(400).send(error.details[0].message);
 
-    
+
     try {
         let tsql = `update rencana set`;
         tsql += ` tanggal='${moment(req.body.tanggal).format('YYYY-MM-DD HH:mm:ss')}', `;
         tsql += ` instansiId=${req.body.instansiId}, `;
-        tsql += ` sub_instansiId=${req.body.sub_instansiId}, `;
+        tsql += ` sub_instansi='${req.body.sub_instansi}', `;
         tsql += ` pic='${req.body.pic}', `;
         tsql += ` keperluan='${req.body.keperluan}', `;
         tsql += ` statusId='${req.body.statusId}', `;
